@@ -27,7 +27,10 @@ function field(array $row, string $base): string {
 
 function base_path(): string {
   $dir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
-  return rtrim($dir, '/');
+  $dir = rtrim($dir, '/');
+
+  // FIX: spaties in mapnaam moeten %20 zijn
+  return str_replace(' ', '%20', $dir);
 }
 
 function csrf_token(): string {

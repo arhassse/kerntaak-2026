@@ -4,9 +4,9 @@
   <div class="row align-items-center g-3">
     <div class="col-md-8">
       <div class="text-muted small mb-1">Warm • Minimal • Modesty</div>
-      <h1 class="mb-2 section-title">Aardse tinten, tijdloze modest fashion</h1>
+      <h1 class="mb-2 section-title"> Tijdloze modest fashion</h1>
       <div class="text-muted mb-3">
-        Ontdek abaya's, hijabs en sets in zachte beige en warme bruine kleuren — geïnspireerd op Merrachi vibes.
+        Ontdek abaya's, hijabs en sets in zachte beige en warme bruine kleuren.
       </div>
       <a class="btn btn-primary" href="<?= e(base_path()) ?>/category/abaya">Shop Abaya's</a>
       <a class="btn btn-outline-primary ms-2" href="<?= e(base_path()) ?>/about">Over ons</a>

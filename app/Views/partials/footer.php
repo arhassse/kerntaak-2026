@@ -1,4 +1,8 @@
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= e(base_path()) ?>/assets/js/app.js"></script>
+</body>
+</html>
 
 <footer class="footer py-5 mt-4">
   <div class="container">
@@ -18,7 +22,7 @@
           <button class="btn btn-primary">Abonneer</button>
         </form>
         <div class="small text-muted mt-2">
-          Na aanmelden krijg je na 5 seconden een 10% welkomskorting.
+         Meld je aan en krijg 10% korting op je eerste bestelling!
         </div>
       </div>
     </div>

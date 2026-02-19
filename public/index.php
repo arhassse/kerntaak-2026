@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 session_start();
@@ -16,8 +15,6 @@ use App\Controllers\AdminController;
 use App\Controllers\PagesController;
 use App\Controllers\NewsletterController;
 
-
-
 $home = new HomeController();
 $catalog = new CatalogController();
 $product = new ProductController();
@@ -29,8 +26,6 @@ $admin = new AdminController();
 $pages = new PagesController();
 $newsletter = new NewsletterController();
 
-
-
 // 1) Pak alleen het pad (zonder querystring)
 $uriPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 
@@ -38,130 +33,140 @@ $uriPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 $uriPath = rawurldecode($uriPath);
 
 // 3) Haal alles vóór /public eruit, zodat routes schoon zijn
-// Werkt voor:
-// /kerntaak 2026/public/
-// /kerntaak 2026/public/category/abaya
-// /kerntaak 2026/public/index.php/category/abaya
 $pos = strpos($uriPath, '/public');
 if ($pos !== false) {
-    $uriPath = substr($uriPath, $pos + strlen('/public'));
+  $uriPath = substr($uriPath, $pos + strlen('/public'));
 }
 
 // 4) Haal eventueel /index.php er ook af
 $uriPath = preg_replace('#^/index\.php#', '', $uriPath);
 
-// 5) Normaliseer naar iets als: /, /category/abaya, /product/1, /lang/nl
+// 5) Normaliseer naar: /, /category/abaya, /product/1, etc.
 $path = '/' . ltrim($uriPath, '/');
 if ($path === '//') $path = '/';
 
-// --- ROUTES ---
+// ---------------- ROUTES ----------------
+
+// HOME
 if ($path === '/' || $path === '') {
-    $home->index();
-    exit;
+  $home->index();
+  exit;
 }
 
+// CATALOG
 if (preg_match('#^/category/([a-z0-9\-]+)$#i', $path, $m)) {
-    $catalog->category($m[1]);
-    exit;
+  $catalog->category($m[1]);
+  exit;
 }
 
+// PRODUCT
 if (preg_match('#^/product/(\d+)$#', $path, $m)) {
-    $product->show((int)$m[1]);
-    exit;
+  $product->show((int)$m[1]);
+  exit;
 }
 
+// LANGUAGE
 if (preg_match('#^/lang/(nl|en)$#', $path, $m)) {
-    $lang->set($m[1]);
-    exit;
+  $lang->set($m[1]);
+  exit;
 }
+
 // CART
-if ($path === '/cart') {
-    $cart->show();
-    exit;
+if ($path === '/cart' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $cart->show();
+  exit;
 }
 
 if ($path === '/cart/add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $cart->add();
-    exit;
+  $cart->add();
+  exit;
 }
 
 if ($path === '/cart/update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $cart->update();
-    exit;
+  $cart->update();
+  exit;
+}
+
+if ($path === '/cart/discount' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $cart->applyDiscount();
+  exit;
 }
 
 if (preg_match('#^/cart/remove/(\d+)$#', $path, $m)) {
-    $cart->remove((int)$m[1]);
-    exit;
-}
-
-
-if ($path === '/cart/discount' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $cart->applyDiscount();
-    exit;
+  $cart->remove((int)$m[1]);
+  exit;
 }
 
 // CHECKOUT
 if ($path === '/checkout' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $checkout->form();
-    exit;
+  $checkout->form();
+  exit;
 }
 
 if ($path === '/checkout' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $checkout->submit();
-    exit;
+  $checkout->submit();
+  exit;
 }
 
 if (preg_match('#^/success/(.+)$#', $path, $m)) {
-    $checkout->success($m[1]);
-    exit;
+  $checkout->success($m[1]);
+  exit;
 }
 
-// PAGES
-if ($path === '/about') {
-    $pages->about();
-    exit;
+// PAGES (about/contact/reviews)
+if ($path === '/about' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $pages->about();
+  exit;
 }
-if ($path === '/contact') {
-    $pages->contact();
-    exit;
+
+if ($path === '/contact' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $pages->contact();
+  exit;
 }
-if ($path === '/reviews') {
-    $pages->reviews();
-    exit;
+
+if ($path === '/reviews' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $pages->reviews();
+  exit;
+}
+
+if ($path === '/reviews' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $pages->reviewsSubmit();
+  exit;
 }
 
 // NEWSLETTER
 if ($path === '/newsletter/subscribe' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newsletter->subscribe();
-    exit;
+  $newsletter->subscribe();
+  exit;
 }
 
 // AUTH
 if ($path === '/login' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $auth->loginForm();
-    exit;
+  $auth->loginForm();
+  exit;
 }
 
 if ($path === '/login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $auth->login();
-    exit;
+  $auth->login();
+  exit;
 }
 
 if ($path === '/logout') {
-    $auth->logout();
-    exit;
+  $auth->logout();
+  exit;
 }
+
 // ADMIN
 if ($path === '/admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-    $admin->dashboard();
-    exit;
+  $admin->dashboard();
+  exit;
 }
 
 if ($path === '/admin/stock' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $admin->updateStock();
-    exit;
+  $admin->updateStock();
+  exit;
 }
 
+// 404
 http_response_code(404);
 echo "404 - pagina niet gevonden";

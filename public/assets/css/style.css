@@ -84,3 +84,82 @@ a:hover{ color: var(--dark); }
 .offcanvas{
   background: var(--cream);
 }
+:root{
+  --sand:#F3E7D6;        /* warm beige */
+  --sand-2:#E9D7BF;      /* donkerder beige */
+  --earth:#6B4E2E;       /* bruin */
+  --earth-2:#4E3822;     /* donker bruin */
+  --line:#E7DCCB;
+}
+
+/* Navbar */
+.navbar-saarr{
+  background: var(--sand) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+.navbar-saarr .navbar-brand{
+  color: var(--earth) !important;
+  letter-spacing: .5px;
+}
+.navbar-saarr .nav-link{
+  color: var(--earth-2) !important;
+}
+.navbar-saarr .nav-link:hover{
+  opacity:.85;
+}
+
+/* --- Saarr's Modesty: minimal merrachi vibe overrides --- */
+:root{
+  --saarr-sand:#F3E7D6;   /* warm beige */
+  --saarr-sand2:#E6D2B6;  /* warm beige donker */
+  --saarr-earth:#6B4E2E;  /* bruin */
+  --saarr-line:#E7DCCB;
+}
+
+/* Navbar alleen */
+.navbar{
+  background: var(--saarr-sand) !important;
+  border-bottom: 1px solid var(--saarr-line) !important;
+}
+.navbar .navbar-brand{
+  color: var(--saarr-earth) !important;
+}
+
+/* Buttons: alleen de primary (bootstrap blauw weg) */
+.btn.btn-primary{
+  background: var(--saarr-sand2) !important;
+  border-color: var(--saarr-sand2) !important;
+  color: var(--saarr-earth) !important;
+}
+.btn.btn-primary:hover{
+  background: #d9c2a1 !important;
+  border-color: #d9c2a1 !important;
+  color: var(--saarr-earth) !important;
+}
+
+/* Optioneel: outline-primary iets warmer */
+.btn.btn-outline-primary{
+  border-color: var(--saarr-earth) !important;
+  color: var(--saarr-earth) !important;
+}
+.btn.btn-outline-primary:hover{
+  background: var(--saarr-sand2) !important;
+  border-color: var(--saarr-sand2) !important;
+  color: var(--saarr-earth) !important;
+}
+
+/* Beige “vakje” styling (alleen als je deze class gebruikt) */
+.saarr-soft{
+  background: #FBF4EA;
+  border: 1px solid var(--saarr-line);
+  border-radius: .75rem;
+}
+
+/* Product afbeeldingen consistent */
+.product-img,
+.card img.product-img{
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  object-fit: cover;
+  border-radius: .75rem;
+}
