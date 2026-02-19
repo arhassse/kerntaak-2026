@@ -1,0 +1,5 @@
+.env
+/storage/uploads/*
+/vendor/
+public/hash.php
+
