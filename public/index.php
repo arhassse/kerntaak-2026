@@ -13,6 +13,8 @@ use App\Controllers\CartController;
 use App\Controllers\CheckoutController;
 use App\Controllers\AuthController;
 use App\Controllers\AdminController;
+use App\Controllers\PagesController;
+use App\Controllers\NewsletterController;
 
 
 
@@ -24,6 +26,8 @@ $cart = new CartController();
 $checkout = new CheckoutController();
 $auth = new AuthController();
 $admin = new AdminController();
+$pages = new PagesController();
+$newsletter = new NewsletterController();
 
 
 
@@ -91,6 +95,12 @@ if (preg_match('#^/cart/remove/(\d+)$#', $path, $m)) {
     exit;
 }
 
+
+if ($path === '/cart/discount' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $cart->applyDiscount();
+    exit;
+}
+
 // CHECKOUT
 if ($path === '/checkout' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $checkout->form();
@@ -106,6 +116,27 @@ if (preg_match('#^/success/(.+)$#', $path, $m)) {
     $checkout->success($m[1]);
     exit;
 }
+
+// PAGES
+if ($path === '/about') {
+    $pages->about();
+    exit;
+}
+if ($path === '/contact') {
+    $pages->contact();
+    exit;
+}
+if ($path === '/reviews') {
+    $pages->reviews();
+    exit;
+}
+
+// NEWSLETTER
+if ($path === '/newsletter/subscribe' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $newsletter->subscribe();
+    exit;
+}
+
 // AUTH
 if ($path === '/login' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $auth->loginForm();

@@ -12,6 +12,9 @@ final class CartController
     $categories = Category::all();
     $items = CartService::items();
     $subtotal = CartService::subtotal();
+    $discountCode = CartService::discountCode();
+    $discountAmount = CartService::discountAmount($subtotal);
+    $total = CartService::total();
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/cart.php';
@@ -42,6 +45,26 @@ final class CartController
     foreach (($_POST['qty'] ?? []) as $variantId => $qty) {
       CartService::update((int)$variantId, (int)$qty);
     }
+    header("Location: " . base_path() . "/cart");
+    exit;
+  }
+
+  public function applyDiscount(): void
+  {
+    csrf_check($_POST['csrf'] ?? null);
+
+    $code = (string)($_POST['code'] ?? '');
+    try {
+      CartService::applyDiscountCode($code);
+      if (trim($code) === '') {
+        flash('success', 'Kortingscode verwijderd.');
+      } else {
+        flash('success', 'Kortingscode toegepast!');
+      }
+    } catch (\Throwable $e) {
+      flash('error', $e->getMessage());
+    }
+
     header("Location: " . base_path() . "/cart");
     exit;
   }

@@ -15,6 +15,10 @@ final class CheckoutController
     if (!$items) { header("Location: " . base_path() . "/cart"); exit; }
 
     $subtotal = CartService::subtotal();
+    $discountCode = CartService::discountCode();
+    $discountAmount = CartService::discountAmount($subtotal);
+    $total = CartService::total();
+
     $old = $_SESSION['checkout_old'] ?? [];
     unset($_SESSION['checkout_old']);
 

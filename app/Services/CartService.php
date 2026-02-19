@@ -7,6 +7,10 @@ use App\Models\Variant;
 
 final class CartService
 {
+  private const DISCOUNT_CODES = [
+    'WELCOME10' => 10, // 10%
+  ];
+
   private static function &cart(): array {
     if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) $_SESSION['cart'] = [];
     return $_SESSION['cart'];
@@ -82,6 +86,53 @@ final class CartService
     $sum = 0.0;
     foreach (self::items() as $it) $sum += (float)$it['line_total'];
     return $sum;
+  }
+
+  public static function applyDiscountCode(string $code): void
+  {
+    $code = strtoupper(trim($code));
+    if ($code === '') {
+      self::clearDiscount();
+      return;
+    }
+
+    if (!isset(self::DISCOUNT_CODES[$code])) {
+      throw new \RuntimeException('Ongeldige kortingscode.');
+    }
+
+    $_SESSION['discount'] = [
+      'code' => $code,
+      'percent' => (int)self::DISCOUNT_CODES[$code],
+    ];
+  }
+
+  public static function clearDiscount(): void
+  {
+    unset($_SESSION['discount']);
+  }
+
+  public static function discountCode(): ?string
+  {
+    return $_SESSION['discount']['code'] ?? null;
+  }
+
+  public static function discountPercent(): int
+  {
+    return (int)($_SESSION['discount']['percent'] ?? 0);
+  }
+
+  public static function discountAmount(float $subtotal): float
+  {
+    $p = self::discountPercent();
+    if ($p <= 0) return 0.0;
+    return round($subtotal * ($p / 100), 2);
+  }
+
+  public static function total(): float
+  {
+    $subtotal = self::subtotal();
+    $discount = self::discountAmount($subtotal);
+    return max(0.0, round($subtotal - $discount, 2));
   }
 
   public static function clear(): void {

@@ -37,7 +37,7 @@ final class OrderService
       }
 
       $subtotal = CartService::subtotal();
-      $total = $subtotal;
+      $total = CartService::total();
 
       $orderNumber = 'SAARR-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2)));
       $status = 'Paid_demo';
@@ -108,6 +108,7 @@ final class OrderService
 
       $pdo->commit();
       CartService::clear();
+      CartService::clearDiscount();
 
       return $orderNumber;
 

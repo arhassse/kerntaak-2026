@@ -1,0 +1,86 @@
+:root{
+  --sand: #f6f0e6;
+  --beige: #e9dccb;
+  --taupe: #c7b29a;
+  --brown: #6b4f3a;
+  --dark: #2a1f18;
+  --cream: #fffaf3;
+}
+
+body{
+  background: var(--sand);
+  color: var(--dark);
+}
+
+a{ color: var(--brown); }
+a:hover{ color: var(--dark); }
+
+.navbar{
+  background: var(--cream) !important;
+  border-bottom: 1px solid rgba(0,0,0,.06) !important;
+}
+
+.brand-center{
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.btn-primary{
+  background: var(--brown);
+  border-color: var(--brown);
+}
+.btn-primary:hover{
+  background: var(--dark);
+  border-color: var(--dark);
+}
+.btn-outline-primary{
+  color: var(--brown);
+  border-color: var(--brown);
+}
+.btn-outline-primary:hover{
+  background: var(--brown);
+  border-color: var(--brown);
+}
+
+.card{
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,.05);
+  border-radius: 16px;
+}
+.card:hover{
+  transform: translateY(-2px);
+  transition: transform .15s ease;
+}
+
+.product-img{
+  width:100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.section-title{
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.badge-earth{
+  background: var(--taupe);
+  color: var(--dark);
+}
+
+.footer{
+  background: var(--cream);
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+.form-control:focus, .form-select:focus{
+  border-color: var(--taupe);
+  box-shadow: 0 0 0 .25rem rgba(199,178,154,.25);
+}
+
+/* offcanvas menu */
+.offcanvas{
+  background: var(--cream);
+}

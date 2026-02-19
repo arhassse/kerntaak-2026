@@ -2,7 +2,7 @@
 
 <div class="row g-4">
   <div class="col-md-5">
-    <img class="img-fluid rounded border"
+    <img class="img-fluid rounded border" style="width:100%; aspect-ratio:4/5; object-fit:cover;"
          src="<?= e(base_path()) ?>/<?= e($product['image_path'] ?? 'assets/img/placeholder.jpg') ?>"
          alt="<?= e(field($product,'name')) ?>">
   </div>
