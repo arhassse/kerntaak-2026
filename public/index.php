@@ -58,14 +58,12 @@ if (preg_match('#^/category/([a-z0-9\-]+)$#i', $path, $m)) {
   $catalog->category($m[1]);
   exit;
 }
-git add public/index.php
-git commit -m "Add search route to catalog"
-git push origin main
+
 // SEARCH
 if ($path === '/search' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   $catalog->search();
   exit;
-} 
+}
 
 // PRODUCT
 if (preg_match('#^/product/(\d+)$#', $path, $m)) {
