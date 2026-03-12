@@ -143,3 +143,14 @@ CREATE TABLE order_items (
 
   CONSTRAINT chk_quantity CHECK (quantity > 0)
 ) ENGINE=InnoDB;
+
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    rating INT NOT NULL,
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
