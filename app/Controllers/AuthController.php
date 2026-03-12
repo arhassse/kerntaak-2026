@@ -52,4 +52,10 @@ final class AuthController
         header("Location: " . base_path() . "/");
         exit;
     }
+
+public function register(): void
+{
+    require __DIR__ . '/../Views/auth/register.php';
+}
+
 }
