@@ -11,3 +11,12 @@ Register
 </button>
 
 </form>
+<form method="POST" action="/cart/remove">
+
+<input type="hidden" name="id" value="<?= $item['id'] ?>">
+
+<button type="submit">
+Remove
+</button>
+
+</form>
