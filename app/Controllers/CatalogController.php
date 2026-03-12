@@ -19,15 +19,31 @@ final class CatalogController
       return;
     }
 
-    $products = Product::byCategoryId((int)$category['id']);
+    $sort = $_GET['sort'] ?? 'newest';
+
+    switch ($sort) {
+
+        case 'price_low':
+            $order = "price ASC";
+            break;
+
+        case 'price_high':
+            $order = "price DESC";
+            break;
+
+        default:
+            $order = "created_at DESC";
+    }
+
+    $products = Product::allSorted((int)$category['id'], $order);
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/category.php';
     require __DIR__ . '/../Views/partials/footer.php';
   }
 
-public function search(): void
-{
+  public function search(): void
+  {
     $query = trim($_GET['q'] ?? '');
 
     if ($query === '') {
@@ -35,15 +51,11 @@ public function search(): void
         exit;
     }
 
-    $products = \App\Models\Product::search($query);
-    $categories = \App\Models\Category::all();
+    $products = Product::search($query);
+    $categories = Category::all();
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/catalog/index.php';
     require __DIR__ . '/../Views/partials/footer.php';
+  }
 }
-
-
-}
-
-
