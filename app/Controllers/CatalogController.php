@@ -25,4 +25,25 @@ final class CatalogController
     require __DIR__ . '/../Views/pages/category.php';
     require __DIR__ . '/../Views/partials/footer.php';
   }
+
+public function search(): void
+{
+    $query = trim($_GET['q'] ?? '');
+
+    if ($query === '') {
+        header("Location: " . base_path() . "/catalog");
+        exit;
+    }
+
+    $products = \App\Models\Product::search($query);
+    $categories = \App\Models\Category::all();
+
+    require __DIR__ . '/../Views/partials/header.php';
+    require __DIR__ . '/../Views/catalog/index.php';
+    require __DIR__ . '/../Views/partials/footer.php';
 }
+
+
+}
+
+
