@@ -88,12 +88,15 @@
 
 <main class="container py-4">
 
-<form method="GET" action="<?= base_path() ?>/search">
-
-<input type="text" name="q" placeholder="Search products">
-
-<button type="submit">Search</button>
-
-<form method="GET" action="/search">
-  
+<form method="GET" action="<?= e(base_path()) ?>/search" class="mb-4 mt-3">
+  <div class="d-flex gap-2">
+    <input 
+      type="text" 
+      name="search" 
+      value="<?= e($_GET['search'] ?? '') ?>" 
+      placeholder="Zoek producten..." 
+      class="form-control"
+    >
+    <button class="btn btn-primary">Zoek</button>
+  </div>
 </form>

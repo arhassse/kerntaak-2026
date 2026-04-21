@@ -27,6 +27,11 @@ final class CartController
     $variantId = (int)($_POST['variant_id'] ?? 0);
     $qty = (int)($_POST['qty'] ?? 1);
 
+    // 🔥 FIX
+    if ($variantId === 0) {
+      $variantId = -1;
+    }
+
     try {
       CartService::add($variantId, $qty);
       flash('success', 'Toegevoegd aan winkelwagen.');
@@ -56,11 +61,7 @@ final class CartController
     $code = (string)($_POST['code'] ?? '');
     try {
       CartService::applyDiscountCode($code);
-      if (trim($code) === '') {
-        flash('success', 'Kortingscode verwijderd.');
-      } else {
-        flash('success', 'Kortingscode toegepast!');
-      }
+      flash('success', 'Kortingscode toegepast!');
     } catch (\Throwable $e) {
       flash('error', $e->getMessage());
     }

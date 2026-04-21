@@ -163,3 +163,20 @@ a:hover{ color: var(--dark); }
   object-fit: cover;
   border-radius: .75rem;
 }
+
+/* 🔥 FIXES */
+.card {
+  margin-bottom: 20px;
+}
+
+.product-card {
+  padding: 10px;
+}
+
+h5, p {
+  word-break: break-word;
+}
+
+main.container {
+  margin-top: 20px;
+}

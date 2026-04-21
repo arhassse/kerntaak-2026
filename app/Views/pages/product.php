@@ -26,16 +26,23 @@
 
         <div class="mb-2">
           <label class="form-label">Variant</label>
-          <select class="form-select" name="variant_id" required>
-            <option value="">-- kies maat/kleur --</option>
-            <?php foreach ($variants as $v): ?>
-              <option value="<?= (int)$v['id'] ?>" <?= ((int)$v['stock'] <= 0) ? 'disabled' : '' ?>>
-                <?= e($v['size']) ?> / <?= e($v['color']) ?>
-                <?= ((int)$v['stock'] > 0) ? ('(' . (int)$v['stock'] . ')') : '(uitverkocht)' ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-          
+
+          <?php if (!empty($variants)): ?>
+            <select class="form-select" name="variant_id" required>
+              <option value="">-- kies maat/kleur --</option>
+              <?php foreach ($variants as $v): ?>
+                <option value="<?= (int)$v['id'] ?>" <?= ((int)$v['stock'] <= 0) ? 'disabled' : '' ?>>
+                  <?= e($v['size']) ?> / <?= e($v['color']) ?>
+                  <?= ((int)$v['stock'] > 0) ? ('(' . (int)$v['stock'] . ')') : '(uitverkocht)' ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          <?php else: ?>
+            <!-- 🔥 FIX -->
+            <input type="hidden" name="variant_id" value="0">
+            <div class="text-muted">Dit product heeft geen varianten</div>
+          <?php endif; ?>
+
         </div>
 
         <div class="mb-2">
@@ -59,11 +66,5 @@
       <?php endforeach; ?>
     </ul>
 
-
   </div>
-
-      
 </div>
-
-
-
