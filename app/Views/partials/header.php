@@ -44,19 +44,34 @@
   </div>
 
   <div class="offcanvas-body">
+
+    <!-- 🔥 FIXED PRODUCT MENU -->
     <div class="mb-3">
       <div class="fw-semibold mb-2">Producten</div>
       <div class="list-group">
-        <?php foreach (($categories ?? []) as $c): ?>
-          <a class="list-group-item list-group-item-action"
-             href="<?= e(base_path()) ?>/category/<?= e($c['slug']) ?>"
-             data-bs-dismiss="offcanvas">
-            <?= e(field($c, 'name')) ?>
-          </a>
-        <?php endforeach; ?>
+
+        <a class="list-group-item list-group-item-action"
+           href="<?= e(base_path()) ?>/category/abaya"
+           data-bs-dismiss="offcanvas">
+           Abaya
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="<?= e(base_path()) ?>/category/khimar"
+           data-bs-dismiss="offcanvas">
+           Khimar
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="<?= e(base_path()) ?>/category/accessoires"
+           data-bs-dismiss="offcanvas">
+           Accessoires
+        </a>
+
       </div>
     </div>
 
+    <!-- Pagina's -->
     <div class="mb-3">
       <div class="fw-semibold mb-2">Pagina's</div>
       <div class="list-group">
@@ -66,6 +81,7 @@
       </div>
     </div>
 
+    <!-- Account -->
     <div class="mb-3">
       <div class="fw-semibold mb-2">Account</div>
       <div class="list-group">
@@ -88,6 +104,7 @@
 
 <main class="container py-4">
 
+<!-- 🔥 FIXED SEARCH -->
 <form method="GET" action="<?= e(base_path()) ?>/search" class="mb-4 mt-3">
   <div class="d-flex gap-2">
     <input 
