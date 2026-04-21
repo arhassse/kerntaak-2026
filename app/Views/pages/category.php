@@ -1,5 +1,11 @@
-<form method="GET" action="/search" class="mb-3">
-  <input type="text" name="search" placeholder="Zoek producten..." class="form-control">
+<form method="GET" action="<?= e(base_path()) ?>/search" class="mb-3">
+  <input 
+    type="text" 
+    name="search" 
+    value="<?= e($_GET['search'] ?? '') ?>" 
+    placeholder="Zoek producten..." 
+    class="form-control"
+  >
 </form>
 
 <h1 class="mb-3"><?= e(field($category, 'name')) ?></h1>
