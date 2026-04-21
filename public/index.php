@@ -26,22 +26,17 @@ $admin = new AdminController();
 $pages = new PagesController();
 $newsletter = new NewsletterController();
 
-// 1) Pak alleen het pad (zonder querystring)
+// URI verwerken
 $uriPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
-
-// 2) Decode %20 enz. (voor spaties e.d.)
 $uriPath = rawurldecode($uriPath);
 
-// 3) Haal alles vóór /public eruit, zodat routes schoon zijn
 $pos = strpos($uriPath, '/public');
 if ($pos !== false) {
   $uriPath = substr($uriPath, $pos + strlen('/public'));
 }
 
-// 4) Haal eventueel /index.php er ook af
 $uriPath = preg_replace('#^/index\.php#', '', $uriPath);
 
-// 5) Normaliseer naar: /, /category/abaya, /product/1, etc.
 $path = '/' . ltrim($uriPath, '/');
 if ($path === '//') $path = '/';
 
@@ -119,7 +114,7 @@ if (preg_match('#^/success/(.+)$#', $path, $m)) {
   exit;
 }
 
-// PAGES (about/contact/reviews)
+// PAGES
 if ($path === '/about' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   $pages->about();
   exit;
@@ -162,6 +157,17 @@ if ($path === '/logout') {
   exit;
 }
 
+// ✅ REGISTER (NIEUW TOEGEVOEGD)
+if ($path === '/register' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $auth->showRegister();
+  exit;
+}
+
+if ($path === '/register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $auth->register();
+  exit;
+}
+
 // ADMIN
 if ($path === '/admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   $admin->dashboard();
@@ -176,4 +182,3 @@ if ($path === '/admin/stock' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // 404
 http_response_code(404);
 echo "404 - pagina niet gevonden";
-
