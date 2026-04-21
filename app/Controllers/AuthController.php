@@ -30,7 +30,8 @@ final class AuthController
 
         $user = $stmt->fetch();
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        // ✅ FIX: password_hash gebruiken
+        if (!$user || !password_verify($password, $user['password_hash'])) {
             flash('error', 'Onjuiste login.');
             header("Location: " . base_path() . "/login");
             exit;
@@ -39,6 +40,7 @@ final class AuthController
         $_SESSION['user'] = [
             'id' => $user['id'],
             'email' => $user['email'],
+            'role' => $user['role'] ?? 'user' // handig voor admin later
         ];
 
         header("Location: " . base_path() . "/");
@@ -52,7 +54,7 @@ final class AuthController
         exit;
     }
 
-    // 👉 NIEUW: registratie formulier tonen
+    // 👉 Registratie formulier
     public function showRegister(): void
     {
         $categories = Category::all();
@@ -62,16 +64,15 @@ final class AuthController
         require __DIR__ . '/../Views/partials/footer.php';
     }
 
-    // 👉 NIEUW: registratie opslaan
+    // 👉 Registratie opslaan
     public function register(): void
     {
         csrf_check($_POST['csrf'] ?? null);
 
-        $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
-        if ($name === '' || $email === '' || $password === '') {
+        if ($email === '' || $password === '') {
             flash('error', 'Vul alle velden in.');
             header("Location: " . base_path() . "/register");
             exit;
@@ -82,15 +83,16 @@ final class AuthController
         $pdo = Database::pdo();
 
         $stmt = $pdo->prepare("
-            INSERT INTO users (name, email, password)
-            VALUES (:name, :email, :password)
+            INSERT INTO users (email, password_hash, role)
+            VALUES (:email, :password, 'user')
         ");
 
         $stmt->execute([
-            'name' => $name,
             'email' => $email,
             'password' => $hash
         ]);
+
+        flash('success', 'Account aangemaakt! Je kunt nu inloggen.');
 
         header("Location: " . base_path() . "/login");
         exit;
