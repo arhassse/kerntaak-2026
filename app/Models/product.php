@@ -49,4 +49,33 @@ final class Product
     $row = $stmt->fetch();
     return $row ?: null;
   }
+
+public static function search(string $query): array
+{
+    $db = Database::getConnection();
+
+    $stmt = $db->prepare("
+        SELECT * FROM products
+        WHERE name_nl LIKE :search
+        OR name_en LIKE :search
+    ");
+
+    $stmt->execute([
+        'search' => "%$query%"
+    ]);
+
+    return $stmt->fetchAll();
+}
+
+public static function allSorted(string $order): array
+{
+    $db = Database::getConnection();
+
+    $stmt = $db->query("
+        SELECT * FROM products
+        ORDER BY $order
+    ");
+
+    return $stmt->fetchAll();
+}
 }

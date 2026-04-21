@@ -87,11 +87,13 @@
 </div>
 
 <main class="container py-4">
-  
+
 <form method="GET" action="<?= base_path() ?>/search">
 
 <input type="text" name="q" placeholder="Search products">
 
 <button type="submit">Search</button>
 
+<form method="GET" action="/search">
+  
 </form>
