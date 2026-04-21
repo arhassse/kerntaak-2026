@@ -22,20 +22,19 @@ final class CatalogController
     $sort = $_GET['sort'] ?? 'newest';
 
     switch ($sort) {
+      case 'price_low':
+        $order = "price ASC";
+        break;
 
-        case 'price_low':
-            $order = "price ASC";
-            break;
+      case 'price_high':
+        $order = "price DESC";
+        break;
 
-        case 'price_high':
-            $order = "price DESC";
-            break;
-
-        default:
-            $order = "created_at DESC";
+      default:
+        $order = "created_at DESC";
     }
 
-    $products = Product::allSorted((int)$category['id'], $order);
+    $products = Product::byCategoryId((int)$category['id'], $order);
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/category.php';
@@ -44,18 +43,18 @@ final class CatalogController
 
   public function search(): void
   {
-    $query = trim($_GET['q'] ?? '');
+    $query = trim($_GET['search'] ?? '');
 
     if ($query === '') {
-        header("Location: " . base_path() . "/catalog");
-        exit;
+      header("Location: " . base_path() . "/catalog");
+      exit;
     }
 
     $products = Product::search($query);
     $categories = Category::all();
 
     require __DIR__ . '/../Views/partials/header.php';
-    require __DIR__ . '/../Views/catalog/index.php';
+    require __DIR__ . '/../Views/pages/category.php';
     require __DIR__ . '/../Views/partials/footer.php';
   }
 }

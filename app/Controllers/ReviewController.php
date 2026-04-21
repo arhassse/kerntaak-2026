@@ -11,7 +11,7 @@ final class ReviewController
   public function index(): void
   {
     $categories = Category::all();
-    $reviews = Review::all();
+    $reviews = Reviews::all();
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/reviews.php';

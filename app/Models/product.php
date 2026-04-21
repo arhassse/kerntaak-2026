@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use PDO;
+
 final class Product
 {
   public static function latest(int $limit = 8): array
   {
     $pdo = Database::pdo();
+
     $stmt = $pdo->prepare("
       SELECT p.*, pi.image_path
       FROM products p
@@ -16,28 +19,34 @@ final class Product
       ORDER BY p.created_at DESC
       LIMIT :lim
     ");
-    $stmt->bindValue('lim', $limit, \PDO::PARAM_INT);
+
+    $stmt->bindValue('lim', $limit, PDO::PARAM_INT);
     $stmt->execute();
+
     return $stmt->fetchAll();
   }
 
-  public static function byCategoryId(int $categoryId): array
+  public static function byCategoryId(int $categoryId, string $order = "created_at DESC"): array
   {
     $pdo = Database::pdo();
+
     $stmt = $pdo->prepare("
       SELECT p.*, pi.image_path
       FROM products p
       LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.sort_order = 0
       WHERE p.is_active = 1 AND p.category_id = :cid
-      ORDER BY p.created_at DESC
+      ORDER BY $order
     ");
+
     $stmt->execute(['cid' => $categoryId]);
+
     return $stmt->fetchAll();
   }
 
   public static function find(int $id): ?array
   {
     $pdo = Database::pdo();
+
     $stmt = $pdo->prepare("
       SELECT p.*, pi.image_path
       FROM products p
@@ -45,37 +54,29 @@ final class Product
       WHERE p.id = :id AND p.is_active = 1
       LIMIT 1
     ");
+
     $stmt->execute(['id' => $id]);
     $row = $stmt->fetch();
+
     return $row ?: null;
   }
 
-public static function search(string $query): array
-{
-    $db = Database::getConnection();
+  public static function search(string $query): array
+  {
+    $pdo = Database::pdo();
 
-    $stmt = $db->prepare("
-        SELECT * FROM products
-        WHERE name_nl LIKE :search
-        OR name_en LIKE :search
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.is_active = 1 
+      AND p.name LIKE :search
     ");
 
     $stmt->execute([
-        'search' => "%$query%"
+      'search' => "%$query%"
     ]);
 
     return $stmt->fetchAll();
-}
-
-public static function allSorted(string $order): array
-{
-    $db = Database::getConnection();
-
-    $stmt = $db->query("
-        SELECT * FROM products
-        ORDER BY $order
-    ");
-
-    return $stmt->fetchAll();
-}
+  }
 }

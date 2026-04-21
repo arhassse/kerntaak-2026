@@ -1,3 +1,7 @@
+<form method="GET" action="/search" class="mb-3">
+  <input type="text" name="search" placeholder="Zoek producten..." class="form-control">
+</form>
+
 <h1 class="mb-3"><?= e(field($category, 'name')) ?></h1>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
