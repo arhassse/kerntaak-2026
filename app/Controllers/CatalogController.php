@@ -19,21 +19,24 @@ final class CatalogController
       return;
     }
 
+    // 🔥 sort fix
     $sort = $_GET['sort'] ?? 'newest';
 
-switch ($sort) {
-  case 'price_low':
-    $order = "price ASC";
-    break;
+    switch ($sort) {
+      case 'price_low':
+        $order = "p.price ASC";
+        break;
 
-  case 'price_high':
-    $order = "price DESC";
-    break;
+      case 'price_high':
+        $order = "p.price DESC";
+        break;
 
-  default:
-    $order = "created_at DESC";
-}
-    $products = Product::byCategoryId((int)$category['id'], $order);
+      default:
+        $order = "p.created_at DESC";
+    }
+
+    // 🔥 juiste functie gebruiken (met sort)
+    $products = Product::allSorted((int)$category['id'], $order);
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/category.php';
@@ -42,15 +45,22 @@ switch ($sort) {
 
   public function search(): void
   {
-    $query = trim($_GET['search'] ?? '');
+    // 🔥 accepteert zowel ?search= als ?q=
+    $query = trim($_GET['search'] ?? $_GET['q'] ?? '');
 
     if ($query === '') {
-      header("Location: " . base_path() . "/catalog");
+      header("Location: " . base_path() . "/");
       exit;
     }
 
     $products = Product::search($query);
     $categories = Category::all();
+
+    // 🔥 fake category voor view (anders crash)
+    $category = [
+      'name_nl' => 'Zoekresultaten',
+      'name_en' => 'Search results'
+    ];
 
     require __DIR__ . '/../Views/partials/header.php';
     require __DIR__ . '/../Views/pages/category.php';

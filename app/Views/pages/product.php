@@ -1,70 +1,99 @@
-<h1 class="mb-3"><?= e(field($product, 'name')) ?></h1>
+<?php
+declare(strict_types=1);
 
-<div class="row g-4">
-  <div class="col-md-5">
-    <img class="img-fluid rounded border" style="width:100%; aspect-ratio:4/5; object-fit:cover;"
-         src="<?= e(base_path()) ?>/<?= e($product['image_path'] ?? 'assets/img/placeholder.jpg') ?>"
-         alt="<?= e(field($product,'name')) ?>">
-  </div>
+namespace App\Models;
 
-  <div class="col-md-7">
-    <p><?= e(field($product, 'description')) ?></p>
-    <p class="fs-4"><b>€ <?= e(number_format((float)$product['price'], 2, ',', '.')) ?></b></p>
+final class Product
+{
+  public static function latest(int $limit = 8): array
+  {
+    $pdo = Database::pdo();
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.is_active = 1
+      ORDER BY p.created_at DESC
+      LIMIT :lim
+    ");
+    $stmt->bindValue('lim', $limit, \PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
 
-    <?php if ($msg = flash('success')): ?>
-      <div class="alert alert-success"><?= e($msg) ?></div>
-    <?php endif; ?>
-    <?php if ($msg = flash('error')): ?>
-      <div class="alert alert-danger"><?= e($msg) ?></div>
-    <?php endif; ?>
+  public static function byCategoryId(int $categoryId): array
+  {
+    $pdo = Database::pdo();
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.is_active = 1 AND p.category_id = :cid
+      ORDER BY p.created_at DESC
+    ");
+    $stmt->execute(['cid' => $categoryId]);
+    return $stmt->fetchAll();
+  }
 
-    <div class="card p-3">
-      <div class="mb-2 fw-semibold"><?= e(t('choose_variant')) ?></div>
+  public static function find(int $id): ?array
+  {
+    $pdo = Database::pdo();
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.id = :id AND p.is_active = 1
+      LIMIT 1
+    ");
+    $stmt->execute(['id' => $id]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+  }
 
-      <form method="post" action="<?= e(base_path()) ?>/cart/add">
-        <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+  // 🔥 FIXED SEARCH
+  public static function search(string $query): array
+  {
+    $pdo = Database::pdo();
 
-        <div class="mb-2">
-          <label class="form-label">Variant</label>
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.is_active = 1
+        AND (
+          p.name_nl LIKE :search
+          OR p.name_en LIKE :search
+        )
+      ORDER BY p.created_at DESC
+    ");
 
-          <?php if (!empty($variants)): ?>
-            <select class="form-select" name="variant_id" required>
-              <option value="">-- kies maat/kleur --</option>
-              <?php foreach ($variants as $v): ?>
-                <option value="<?= (int)$v['id'] ?>" <?= ((int)$v['stock'] <= 0) ? 'disabled' : '' ?>>
-                  <?= e($v['size']) ?> / <?= e($v['color']) ?>
-                  <?= ((int)$v['stock'] > 0) ? ('(' . (int)$v['stock'] . ')') : '(uitverkocht)' ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          <?php else: ?>
-            <!-- 🔥 FIX -->
-            <input type="hidden" name="variant_id" value="0">
-            <div class="text-muted">Dit product heeft geen varianten</div>
-          <?php endif; ?>
+    $stmt->execute([
+      'search' => '%' . $query . '%'
+    ]);
 
-        </div>
+    return $stmt->fetchAll();
+  }
 
-        <div class="mb-2">
-          <label class="form-label">Aantal</label>
-          <input class="form-control" type="number" name="qty" value="1" min="1">
-        </div>
+  // 🔥 FIXED SORT
+  public static function allSorted(int $categoryId, string $order): array
+  {
+    $pdo = Database::pdo();
 
-        <button class="btn btn-primary mt-2"><?= e(t('add_to_cart')) ?></button>
-      </form>
-    </div>
+    $stmt = $pdo->prepare("
+      SELECT p.*, pi.image_path
+      FROM products p
+      LEFT JOIN product_images pi 
+        ON pi.product_id = p.id AND pi.sort_order = 0
+      WHERE p.is_active = 1 AND p.category_id = :cid
+      ORDER BY $order
+    ");
 
-    <hr>
-    <h5>Varianten</h5>
-    <ul class="mb-0">
-      <?php foreach ($variants as $v): ?>
-        <li>
-          <?= e($v['size']) ?> / <?= e($v['color']) ?> —
-          <?= ((int)$v['stock'] > 0) ? e(t('in_stock')) : e(t('out_of_stock')) ?>
-          (<?= (int)$v['stock'] ?>)
-        </li>
-      <?php endforeach; ?>
-    </ul>
+    $stmt->execute(['cid' => $categoryId]);
 
-  </div>
-</div>
+    return $stmt->fetchAll();
+  }
+}
