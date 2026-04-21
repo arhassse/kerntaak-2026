@@ -174,6 +174,23 @@ if ($path === '/admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   exit;
 }
 
+// CREATE PRODUCT
+if ($path === '/admin/create' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $admin->createForm();
+  exit;
+}
+
+if ($path === '/admin/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $admin->create();
+  exit;
+}
+
+// DELETE PRODUCT
+if (preg_match('#^/admin/delete/(\d+)$#', $path, $m)) {
+  $admin->delete((int)$m[1]);
+  exit;
+}
+
 if ($path === '/admin/stock' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $admin->updateStock();
   exit;
