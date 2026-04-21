@@ -21,19 +21,18 @@ final class CatalogController
 
     $sort = $_GET['sort'] ?? 'newest';
 
-    switch ($sort) {
-      case 'price_low':
-        $order = "price ASC";
-        break;
+switch ($sort) {
+  case 'price_low':
+    $order = "price ASC";
+    break;
 
-      case 'price_high':
-        $order = "price DESC";
-        break;
+  case 'price_high':
+    $order = "price DESC";
+    break;
 
-      default:
-        $order = "created_at DESC";
-    }
-
+  default:
+    $order = "created_at DESC";
+}
     $products = Product::byCategoryId((int)$category['id'], $order);
 
     require __DIR__ . '/../Views/partials/header.php';
