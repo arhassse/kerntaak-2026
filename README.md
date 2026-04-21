@@ -32,6 +32,6 @@ Dit is een PHP MVC webshop ontwikkeld voor Kerntaak K1W3.
 3. Zet project in htdocs
 4. Ga naar /public
 
-## Admin login
-Email: admin@saarr.nl  
-Wachtwoord: admin123
+
+## Inloggen als admin
+Gebruik een account uit de database (zie seed of phpMyAdmin).
